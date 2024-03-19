@@ -1,5 +1,5 @@
 <?php
-	class vsHomebridge {
+	class vsHomeBridge {
 		private $token;
 		private $token_expires = 0;
 		private $api_host;
@@ -89,14 +89,37 @@
 		}
 		// Get single accessory
 		public function getAccessory($uid, $raw=false){
-			if($raw) return $this->callAPI('api/accessories/'. $uid, NULL, 'GET');
+			if (!$this->token) {
+				return ['status' => 'error', 'msg' => 'Unable to authenticate'];
+			}
+			else if($raw) return $this->callAPI('api/accessories/'. $uid, NULL, 'GET');
 			else {
 				$results = $this->callAPI('api/accessories/'. $uid, NULL, 'GET');
 
-				$payload = array_merge($results['values'], $results['accessoryInformation']);
+				$payload = array_merge(['values'=>$results['values']], $results['accessoryInformation']);
 				$payload['type'] = $results['type'];
 				return $payload;
 			}
+		}
+		
+		
+		// Trigger Device
+		public function turnOnLight($uid, $charType, $value) {
+			if (!$this->token) {
+				return ['status' => 'error', 'msg' => 'Unable to authenticate'];
+			}
+
+			$payload = [];
+			$payload['characteristicType'] = $charType;
+			$payload['value'] = $value;
+
+			$response = $this->callAPI('api/accessories/' . $uid, $payload, 'PUT');
+
+			if (!$response || isset($response['status']) && $response['status'] == 'error') {
+				return ['status' => 'error', 'msg' => 'Failed to turn on the light'];
+			}
+
+			return ['status' => 'success', 'msg' => 'Light turned on successfully'];
 		}
 	}
 ?>
