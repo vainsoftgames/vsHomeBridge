@@ -20,7 +20,7 @@ Installation
 You can simply copy the vsHomebridge class file into your project and include it in your PHP script. Ensure that your PHP environment is set up with cURL support.
 
 ```
-require_once 'path/to/vsHomebridge.php';
+require_once 'path/to/vsHomeBridge.php';
 ```
 
 Usage
@@ -31,7 +31,7 @@ Initialize the Class
 First, create an instance of the vsHomebridge class by passing the IP address of your Homebridge server.
 
 ```
-$homebridge = new vsHomebridge('your_homebridge_ip');
+$homebridge = new vsHomeBridge('your_homebridge_ip');
 ```
 
 Login
